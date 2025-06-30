@@ -11,3 +11,12 @@ pom.xml.asc
 /.prepl-port
 .hgignore
 .hg/
+
+
+.lsp
+.clj-kondo
+doc
+.calva
+
+CHANGELOG.md
+LICENSE
