@@ -3,29 +3,50 @@
             [cores-and-threads.logger :as logger]))
 
 
+(defmacro wrap-statsd-time
+  [datapoint & body]
+  `(statsd/with-timing ~datapoint ~@body))
+
+
 (defn do-work
+  [{:keys [input_num
+           times]}]
+  (dotimes [_ times]
+    (Math/sqrt input_num)))
+
+
+(defn start-a-thread
   "Business logic to be executed by each thread"
   [{:keys [thread_id
            machine_type
            metric_prefix
            duration_minutes
-           input_num]}]
-  (let [curr_epoch (System/currentTimeMillis)
-        end_epoch (+ curr_epoch (* duration_minutes 60 1000))]
-    (loop [loop-counter 0]
+           input_num] :as params}]
+  (let [thread_name (.getName (Thread/currentThread))
+        curr_epoch (System/currentTimeMillis)
+        end_epoch (+ curr_epoch (* duration_minutes 60 1000))
+        loop_counter (atom 0)]
+    (logger/info (format "th-name : [%s]"
+                         thread_name)
+                 {})
+    (loop []
       (let [curr_epoch (System/currentTimeMillis)
             diff (- end_epoch curr_epoch)]
         (if (> diff 0)
-          (do (Math/sqrt input_num)
-              (statsd/increment (format "%s.%s.success.%s"
-                                        machine_type
-                                        metric_prefix
-                                        (str "thread-" thread_id)))
-              (recur (inc loop-counter)))
-          (logger/info (format "Done work for %s minutes"
-                               duration_minutes)
+          (do
+            (wrap-statsd-time (format "%s.%s.success.%s"
+                                      machine_type
+                                      metric_prefix
+                                      (str "thread-" thread_id))
+                              (do-work params))
+            (swap! loop_counter inc)
+            (recur))
+          (logger/info (format "Done work : [%s] times, th-name : [%s]"
+                               @loop_counter
+                               thread_name)
                        {:machine_type machine_type
                         :input_num input_num
+                        :thread_name thread_name
                         :thread_id (inc thread_id)}))))))
 
 
@@ -43,7 +64,7 @@
     (dotimes [i threads]
       ;; spawn new thread
       (future
-        (do-work (merge params
-                        {:thread_id i})))))
+        (start-a-thread (merge params
+                               {:thread_id i})))))
   {:status 200
    :body {:message "Processing started"}})

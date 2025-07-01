@@ -3,5 +3,5 @@
            :repl-port 6050}
  :log-config {:dir "/Users/abhinav.dubey/Documents/ad/cores-and-threads/logs"
               :file-name "service-log.log"}
- :statsd {:host "localhost"
+ :statsd {:host "1.2.3.4"
           :port 8125}}

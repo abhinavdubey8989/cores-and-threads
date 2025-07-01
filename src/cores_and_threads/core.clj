@@ -11,8 +11,12 @@
   (:gen-class))
 
 
+(def default-config-path "config-local.edn")
+
+
 (def config
-  (-> "config-local.edn"
+  (-> (or (System/getenv "CONFIG_FILE")
+          default-config-path)
       io/resource
       slurp
       edn/read-string))
@@ -42,7 +46,7 @@
   (logger/setup-logger! (format "%s/%s"
                                 (get-in config [:log-config :dir])
                                 (get-in config [:log-config :file-name])))
-  (logger/info "Setup completed ..." {}))
+  (logger/info "Setup completed ..." config))
 
 
 (defn -main
