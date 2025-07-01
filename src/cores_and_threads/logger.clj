@@ -9,7 +9,12 @@
     {:spit (timbre/spit-appender {:fname log-file-path})}}))
 
 
-(defn info [msg data] (timbre/info msg data))
+(defn info
+  [msg data]
+  (timbre/info msg data))
 
 
-(defn error [msg data] (timbre/error msg data))
+(defn error
+  [msg data]
+  (timbre/error msg data))
+

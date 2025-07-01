@@ -4,7 +4,6 @@
 profiles.clj
 pom.xml
 pom.xml.asc
-*.jar
 *.class
 /.lein-*
 /.nrepl-port
@@ -13,7 +12,9 @@ pom.xml.asc
 .hg/
 
 
-.lsp
+.lsp/*
+.lsp/.cache/*
+
 .clj-kondo
 doc
 .calva
@@ -23,3 +24,7 @@ LICENSE
 logs
 docs
 .clj-kondo/*
+
+# important
+devops/secret*
+.clj-kondo/.cache/v1/*

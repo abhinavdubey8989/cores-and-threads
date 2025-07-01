@@ -7,19 +7,33 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
-            [cores-and-threads.logger :as logger])
+            [cores-and-threads.logger :as logger]
+            [cores-and-threads.utils :as utils])
   (:gen-class))
 
 
 (def config
-  (-> "config-local.edn"
-      io/resource
+  (-> (if (seq (System/getenv "CONFIG_FILE"))
+        (do (println "reading from system env")
+            (System/getenv "CONFIG_FILE"))
+        (do (println "using default-config-path : " utils/default-config-path)
+            (str utils/default-config-path
+                 "/"
+                 utils/default-config-file)))
+      io/reader
       slurp
       edn/read-string))
 
 
+(defn wrap-ctx
+  [handler config]
+  (fn [request]
+    (handler (assoc request :ctx config))))
+
+
 (def app
   (-> app-routes
+      (wrap-ctx config)
       (wrap-json-body {:keywords? true})
       (wrap-json-response)
       (wrap-defaults api-defaults)))
@@ -42,7 +56,7 @@
   (logger/setup-logger! (format "%s/%s"
                                 (get-in config [:log-config :dir])
                                 (get-in config [:log-config :file-name])))
-  (logger/info "Setup completed ..." {}))
+  (logger/info "Setup completed ..." config))
 
 
 (defn -main
