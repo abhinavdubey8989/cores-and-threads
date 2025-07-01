@@ -2,11 +2,10 @@
 
 (ns cores-and-threads.routes
   (:require [compojure.core :as cc :refer [GET POST defroutes]]
-            [compojure.route :as route]))
+            [compojure.route :as route]
+            [cores-and-threads.service :refer [process-api]]))
+
 
 (defroutes app-routes
-  (GET "/" [] "Welcome to Clojure REST API!")
-  (GET "/hello/:name" [name] (str "Hello, " name "!"))
-  (POST "/echo" req
-    (str "You posted: " (slurp (:body req))))
+  (POST "/api/foo-bar" req (process-api (:body req)))
   (route/not-found "Not Found"))

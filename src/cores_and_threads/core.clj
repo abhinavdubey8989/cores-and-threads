@@ -1,12 +1,53 @@
 (ns cores-and-threads.core
-  (:require [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [cores-and-threads.routes :refer [app-routes]])
+  (:require [clj-statsd :as statsd]
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [cores-and-threads.routes :refer [app-routes]]
+            [nrepl.server :as nrepl]
+            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
+            [cores-and-threads.logger :as logger])
   (:gen-class))
 
-(def app
-  (wrap-defaults app-routes site-defaults))
 
-(defn -main [& args]
-  (println "Starting server on port 3000...")
-  (run-jetty app {:port 3000}))
+(def config
+  (-> "config-local.edn"
+      io/resource
+      slurp
+      edn/read-string))
+
+
+(def app
+  (-> app-routes
+      (wrap-json-body {:keywords? true})
+      (wrap-json-response)
+      (wrap-defaults api-defaults)))
+
+
+(let [nrepl-started? (atom false)]
+  (defn start-nrepl-server
+    "Start an nREPL server"
+    [& {:keys [port] :or {port 6066}}]
+    (when-not @nrepl-started?
+      (nrepl/start-server :bind "0.0.0.0" :port port)
+      (reset! nrepl-started? true)
+      (println "Started nREPL server on localhost:" port))))
+
+
+(defn- setup
+  []
+  (statsd/setup (get-in config [:statsd :host])
+                (get-in config [:statsd :port]))
+  (logger/setup-logger! (format "%s/%s"
+                                (get-in config [:log-config :dir])
+                                (get-in config [:log-config :file-name])))
+  (logger/info "Setup completed ..." {}))
+
+
+(defn -main
+  [& args]
+  (setup)
+  (run-jetty app {:port (get-in config [:service :port])
+                  :join? false})
+  (start-nrepl-server {:port (get-in config [:service :repl-port])}))
