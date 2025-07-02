@@ -1,0 +1,77 @@
+---
+- name: Install Amazon Corretto 21 JDK on Ubuntu EC2
+  hosts: ec2
+  become: yes
+  vars:
+    java_version: "21"
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name:
+          - wget
+          - gnupg
+          - software-properties-common
+        state: present
+
+    - name: Download Amazon Corretto GPG key
+      get_url:
+        url: https://apt.corretto.aws/corretto.key
+        dest: /tmp/corretto.key
+        mode: '0644'
+
+    - name: Add Amazon Corretto GPG key
+      apt_key:
+        file: /tmp/corretto.key
+        state: present
+
+    - name: Add Amazon Corretto repository
+      apt_repository:
+        repo: "deb https://apt.corretto.aws stable main"
+        state: present
+        filename: corretto
+
+    - name: Update apt cache after adding repository
+      apt:
+        update_cache: yes
+
+    - name: Install Amazon Corretto 21 JDK
+      apt:
+        name: "java-{{ java_version }}-amazon-corretto-jdk"
+        state: present
+
+    - name: Set JAVA_HOME environment variable
+      lineinfile:
+        path: /etc/environment
+        regexp: '^JAVA_HOME='
+        line: 'JAVA_HOME=/usr/lib/jvm/java-{{ java_version }}-amazon-corretto'
+        create: yes
+
+    - name: Set default Java version
+      alternatives:
+        name: java
+        path: "/usr/lib/jvm/java-{{ java_version }}-amazon-corretto/bin/java"
+        link: /usr/bin/java
+        priority: 1000
+
+    - name: Set default Java compiler version
+      alternatives:
+        name: javac
+        path: "/usr/lib/jvm/java-{{ java_version }}-amazon-corretto/bin/javac"
+        link: /usr/bin/javac
+        priority: 1000
+
+    - name: Get JAVA_HOME path
+      command: readlink -f /usr/bin/java
+      register: java_home_path
+      changed_when: false
+
+    - name: Clean up temporary files
+      file:
+        path: /tmp/corretto.key
+        state: absent

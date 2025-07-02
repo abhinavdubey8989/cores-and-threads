@@ -32,3 +32,21 @@ AWS Secret Access Key [None]: ??
 Default region name [None]: ap-south-1
 Default output format [None]: json
 ```
+
+
+# Step-4 : Use Terraform to spawn instances
+- create a new dir called `terraform` & a file in this dir `main.tf`
+- `cd` into this dir
+- run `terraform init`
+- run `terraform plan` to see which all resource will be created/updated
+- run `terraform apply -auto-approve` to update the cloud resources (without entering `yes` to confirm)
+- run `terraform destroy -auto-approve` to destroy the created the cloud resources (without entering `yes` to confirm)
+
+
+
+# Step-5 : Use Ansible to install dependencies on instances
+- create a new dir called `terraform` & a file in this dir `main.tf`
+- `cd` into this dir
+- create playbook called `setup.yml`
+- create inventory file called `inventory.yml`
+- run playbook : `ansible-playbook -i inventory.yml setup.yml`

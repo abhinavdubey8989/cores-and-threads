@@ -1,0 +1,28 @@
+---
+- name: Cleanup existing Amazon Corretto configuration
+  hosts: ec2
+  become: yes
+  
+  tasks:
+    - name: Remove existing Corretto repository files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/corretto.list
+        - /etc/apt/sources.list.d/corretto.list.save
+        - /etc/apt/trusted.gpg.d/corretto.gpg
+        - /usr/share/keyrings/corretto.gpg
+      ignore_errors: yes
+      
+    - name: Remove any Corretto entries from sources.list
+      lineinfile:
+        path: /etc/apt/sources.list
+        regexp: '.*corretto.*'
+        state: absent
+      ignore_errors: yes
+      
+    - name: Update apt cache after cleanup
+      apt:
+        update_cache: yes
+      ignore_errors: yes
