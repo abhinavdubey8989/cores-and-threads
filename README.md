@@ -14,5 +14,41 @@
 - run JAR : 
 
 CONFIG_FILE=config-prod.edn \
-java -javaagent:/Users/abhinav.dubey/Downloads/jolokia-jvm-1.6.2-agent.jar=port=8778,host=0.0.0.0 \
+java -javaagent:/Users/abhinav.dubey/Documents/ad/cores-and-threads/devops/static/jolokia-jvm-1.6.2-agent.jar=port=8778,host=0.0.0.0 \
      -jar target/uberjar/cores-and-threads-0.1.0-standalone.jar
+     
+
+# [SCP-1]
+scp -i \
+/Users/abhinav.dubey/Documents/ad/aws-and-docker/0_secrets/aws_ad89.pem \
+/Users/abhinav.dubey/Documents/ad/cores-and-threads/target/uberjar/cores-and-threads-0.1.0-standalone.jar \
+ubuntu@13.233.112.165:/home/ubuntu
+
+scp -i \
+/Users/abhinav.dubey/Documents/ad/aws-and-docker/0_secrets/aws_ad89.pem \
+/Users/abhinav.dubey/Documents/ad/cores-and-threads/resources/* \
+ubuntu@13.233.112.165:/home/ubuntu/
+
+CONFIG_FILE=config-prod.edn \
+java -jar cores-and-threads-0.1.0-standalone.jar
+
+
+
+# [SCP-2]
+scp -i \
+/Users/abhinav.dubey/Documents/ad/aws-and-docker/0_secrets/aws_ad89.pem \
+/Users/abhinav.dubey/Documents/ad/cores-and-threads/target/uberjar/cores-and-threads-0.1.0-standalone.jar \
+ubuntu@13.127.31.44:/home/ubuntu
+
+
+scp -i \
+/Users/abhinav.dubey/Documents/ad/aws-and-docker/0_secrets/aws_ad89.pem \
+/Users/abhinav.dubey/Documents/ad/cores-and-threads/resources/* \
+ubuntu@13.127.31.44:/home/ubuntu/
+
+# [Temp]
+`java -version`
+
+openjdk version "21.0.5" 2024-10-15 LTS
+OpenJDK Runtime Environment Corretto-21.0.5.11.1 (build 21.0.5+11-LTS)
+OpenJDK 64-Bit Server VM Corretto-21.0.5.11.1 (build 21.0.5+11-LTS, mixed mode, sharing)

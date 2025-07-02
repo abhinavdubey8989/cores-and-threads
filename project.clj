@@ -16,4 +16,5 @@
   :main ^:skip-aot cores-and-threads.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all
+                       :uberjar-exclusions [#"^devops/"]
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
