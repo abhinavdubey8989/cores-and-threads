@@ -1,0 +1,33 @@
+---
+- name: Clone and run docker-grafana-graphite
+  hosts: monitoring_machine
+  become: true
+  gather_facts: true
+
+  vars:
+    repo_url: "https://github.com/kamon-io/docker-grafana-graphite"
+    clone_dir: "/home/ubuntu/docker-grafana-graphite"
+
+  tasks:
+    - name: Create directory for the repository
+      file:
+        path: "{{ clone_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Clone the repository
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ clone_dir }}"
+        version: master  # or specify a specific branch/tag
+        force: yes  # overwrites any existing files
+      register: clone_result
+      retries: 3
+      delay: 10
+
+    - name: Run make commands
+      command: "make {{ item }}"
+      args:
+        chdir: "{{ clone_dir }}"
+      loop:
+        - up

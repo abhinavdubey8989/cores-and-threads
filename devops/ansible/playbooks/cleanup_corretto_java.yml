@@ -1,7 +1,8 @@
 ---
 - name: Cleanup existing Amazon Corretto configuration
   hosts: ec2
-  become: yes
+  become: true
+  gather_facts: true
   
   tasks:
     - name: Remove existing Corretto repository files

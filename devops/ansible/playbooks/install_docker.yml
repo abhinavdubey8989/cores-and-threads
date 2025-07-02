@@ -1,69 +1,56 @@
 ---
-- name: Install Docker, Docker Compose v2, and Make on Ubuntu 24.04
+- name: Install Docker, Docker Compose, and Make on Ubuntu 24.04
   hosts: monitoring_machine
-  become: yes
+  become: true
+  gather_facts: true
 
   vars:
-    docker_apt_key_url: https://download.docker.com/linux/ubuntu/gpg
-    docker_apt_repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable"  # Use jammy for Ubuntu 24.04
     docker_packages:
       - docker-ce
       - docker-ce-cli
       - containerd.io
       - docker-buildx-plugin
       - docker-compose-plugin
-    base_dependencies:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - software-properties-common
-      - gnupg
-      - make
 
   tasks:
-
-    - name: Install base dependencies
-      apt:
-        name: "{{ base_dependencies }}"
-        state: present
-        update_cache: yes
-
-    - name: Create keyrings directory for Docker
-      file:
-        path: /etc/apt/keyrings
-        state: directory
-        mode: '0755'
-
-    - name: Download Docker GPG key
-      get_url:
-        url: "{{ docker_apt_key_url }}"
-        dest: /etc/apt/keyrings/docker.gpg
-        mode: '0644'
-
-    - name: Add Docker APT repository (using jammy for Ubuntu 24.04)
-      apt_repository:
-        repo: "{{ docker_apt_repo }}"
-        state: present
-        filename: docker
-
-    - name: Update apt cache
+    - name: Update apt package index
       apt:
         update_cache: yes
 
-    - name: Install Docker and related packages
+    - name: Add Docker's official GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        update_cache: yes
+
+    - name: Install Docker Engine, containerd, and Docker Compose Plugin
       apt:
         name: "{{ docker_packages }}"
         state: present
 
-    - name: Enable and start Docker service
-      systemd:
-        name: docker
-        enabled: yes
-        state: started
+    # This task allow running "docker compose" which is built-in & new , older is "docker-compose"
+    # Since Makefile uses docker-compose, we perform this task too (ref : https://github.com/kamon-io/docker-grafana-graphite)
+    - name: Install Docker Compose standalone (optional)
+      ansible.builtin.get_url:
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+      when: true
 
-    - name: Add user to docker group (for non-root usage)
+    # This task allows the user to run Docker commands without sudo
+    - name: Add current user to docker group
       user:
         name: "{{ ansible_user }}"
         groups: docker
         append: yes
-      when: ansible_user != 'root'
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes

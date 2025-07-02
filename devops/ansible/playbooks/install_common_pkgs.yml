@@ -1,0 +1,26 @@
+---
+- name: Install common packages for all inventory hosts
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    common_packages:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - make
+      - software-properties-common
+      - wget
+      - git
+
+  tasks:
+    - name: Update apt package index
+      apt:
+        update_cache: yes
+
+    - name: Install required common packages
+      apt:
+        name: "{{ common_packages }}"
+        state: present
