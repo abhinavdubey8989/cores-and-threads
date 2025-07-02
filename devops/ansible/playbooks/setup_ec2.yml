@@ -1,6 +1,6 @@
 ---
 - name: Install Amazon Corretto 21 JDK on Ubuntu EC2
-  hosts: ec2
+  hosts: java_machine
   become: yes
   vars:
     java_version: "21"

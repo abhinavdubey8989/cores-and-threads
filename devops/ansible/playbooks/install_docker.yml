@@ -1,0 +1,69 @@
+---
+- name: Install Docker, Docker Compose v2, and Make on Ubuntu 24.04
+  hosts: monitoring_machine
+  become: yes
+
+  vars:
+    docker_apt_key_url: https://download.docker.com/linux/ubuntu/gpg
+    docker_apt_repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable"  # Use jammy for Ubuntu 24.04
+    docker_packages:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    base_dependencies:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - gnupg
+      - make
+
+  tasks:
+
+    - name: Install base dependencies
+      apt:
+        name: "{{ base_dependencies }}"
+        state: present
+        update_cache: yes
+
+    - name: Create keyrings directory for Docker
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker GPG key
+      get_url:
+        url: "{{ docker_apt_key_url }}"
+        dest: /etc/apt/keyrings/docker.gpg
+        mode: '0644'
+
+    - name: Add Docker APT repository (using jammy for Ubuntu 24.04)
+      apt_repository:
+        repo: "{{ docker_apt_repo }}"
+        state: present
+        filename: docker
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker and related packages
+      apt:
+        name: "{{ docker_packages }}"
+        state: present
+
+    - name: Enable and start Docker service
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Add user to docker group (for non-root usage)
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+      when: ansible_user != 'root'

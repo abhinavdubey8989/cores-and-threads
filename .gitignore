@@ -4,7 +4,6 @@
 profiles.clj
 pom.xml
 pom.xml.asc
-*.jar
 *.class
 /.lein-*
 /.nrepl-port
@@ -23,3 +22,6 @@ LICENSE
 logs
 docs
 .clj-kondo/*
+
+# important
+devops/secret*
