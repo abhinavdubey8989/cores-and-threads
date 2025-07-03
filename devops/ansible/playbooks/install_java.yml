@@ -60,6 +60,15 @@
         link: /usr/bin/javac
         priority: 1000
 
+    # this task enables printing when we run "echo $JAVA_HOME" in new terminals
+    - name: Export JAVA_HOME in /etc/profile.d
+      copy:
+        dest: /etc/profile.d/java.sh
+        mode: '0644'
+        content: |
+          export JAVA_HOME=/usr/lib/jvm/java-{{ java_version }}-amazon-corretto
+          export PATH=$JAVA_HOME/bin:$PATH
+
     - name: Get JAVA_HOME path
       command: readlink -f /usr/bin/java
       register: java_home_path

@@ -25,3 +25,4 @@ docs
 
 # important
 devops/secret*
+.clj-kondo/.cache/*

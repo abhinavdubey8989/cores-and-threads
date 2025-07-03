@@ -11,13 +11,17 @@
   (:gen-class))
 
 
-(def default-config-path "config-local.edn")
+(def default-config-path "/Users/abhinav.dubey/Documents/ad/cores-and-threads/resources")
+(def default-config-file "config-local.edn")
 
 
 (def config
-  (-> (or (System/getenv "CONFIG_FILE")
-          default-config-path)
-      io/resource
+  (-> (if (seq (System/getenv "CONFIG_FILE"))
+        (do (println "reading from system env")
+            (System/getenv "CONFIG_FILE"))
+        (do (println "using default-config-path : " default-config-path)
+            (str default-config-path "/" default-config-file)))
+      io/reader
       slurp
       edn/read-string))
 

@@ -1,0 +1,44 @@
+---
+- name: Deploy Java JAR as systemd service with args and memory config
+  hosts: java_node
+  become: yes
+  vars:
+    app_user: ubuntu
+    assets_dir: /home/ubuntu/assets
+    app_jar: cores-and-threads-0.1.0-standalone.jar
+    jolokia_jar: jolokia-jvm-1.6.2-agent.jar
+    config_file: config-prod.edn
+    service_name: cores-and-threads
+    java_opts: "-XX:InitialHeapSize=1g -XX:MinHeapSize=1g -XX:SoftMaxHeapSize=1g -XX:MaxHeapSize=1g -XX:MaxMetaspaceSize=1g"
+    java_agent_opts: "-javaagent:{{ assets_dir }}/{{ jolokia_jar }}=port=8778,host=0.0.0.0"
+
+  tasks:
+    - name: Create systemd service
+      copy:
+        dest: "/etc/systemd/system/{{ service_name }}.service"
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Java App with Jolokia and Config
+          After=network.target
+
+          [Service]
+          User={{ app_user }}
+          WorkingDirectory={{ assets_dir }}
+          Environment="CONFIG_FILE={{ assets_dir }}/{{ config_file }}"
+          ExecStart=/usr/bin/java {{ java_opts }} {{ java_agent_opts }} -jar {{ assets_dir }}/{{ app_jar }}
+          Restart=on-failure
+          SuccessExitStatus=143
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start the service
+      systemd:
+        name: "{{ service_name }}"
+        enabled: yes
+        state: restarted
