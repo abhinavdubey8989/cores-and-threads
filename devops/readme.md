@@ -49,4 +49,4 @@ Default output format [None]: json
 - `cd` into this dir
 - create playbook called `setup.yml`
 - create inventory file called `inventory.yml`
-- run playbook : `ansible-playbook -i inventory.yml setup.yml`
+- run playbook : `ansible-playbook -i inventory.yml playbook.yml`
