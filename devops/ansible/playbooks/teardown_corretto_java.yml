@@ -1,5 +1,5 @@
 ---
-- name: Cleanup existing Amazon Corretto configuration
+- name: Tear-down/Cleanup existing Amazon Corretto configuration
   hosts: java_node
   become: true
   gather_facts: true

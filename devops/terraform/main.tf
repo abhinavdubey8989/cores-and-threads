@@ -11,12 +11,12 @@ resource "aws_instance" "example" {
 
   user_data = <<-EOF
     #!/bin/bash
-    hostnamectl set-hostname my-awesome-ec2
-    echo "my-awesome-ec2" > /etc/hostname
-    sed -i "1s/^/127.0.0.1 my-awesome-ec2\\n/" /etc/hosts
+    hostnamectl set-hostname java-1-core
+    echo "java-1-core" > /etc/hostname
+    sed -i "1s/^/127.0.0.1 java-1-core\\n/" /etc/hosts
   EOF
 
   tags = {
-    Name = "Terraform-EC2-v2"
+    Name = "java-1-core"
   }
 }

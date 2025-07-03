@@ -1,5 +1,5 @@
 ---
-- name: Create systemd jobs for scraping JVM metrics, 1 job for each target java node
+- name: Create systemd jobs for scraping JVM metrics, 1 job per target java node
   hosts: monitoring_node
   become: true
   gather_facts: true

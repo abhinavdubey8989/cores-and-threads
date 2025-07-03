@@ -1,6 +1,6 @@
 ---
 - name: Append entries to /etc/hosts
-  hosts: java_node
+  hosts: all
   become: true
   gather_facts: true
 
