@@ -1,0 +1,34 @@
+---
+- name: Transfer static assets and start script on all hosts
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    local_asset_dir: /home/ubuntu/ansible/assets
+    remote_asset_dir: /home/ubuntu/assets
+    asset_owner: ubuntu
+    asset_group: ubuntu
+
+  tasks:
+    - name: Ensure remote asset directory exists
+      file:
+        path: "{{ remote_asset_dir }}"
+        state: directory
+        mode: '0750' # all users can cd into this dir
+        owner: "{{ asset_owner }}"
+        group: "{{ asset_group }}"
+
+    - name: Copy asset directory to remote host using synchronize pkg which uses rsync
+      copy:
+        src: "{{ local_asset_dir }}/"
+        dest: "{{ remote_asset_dir }}"
+        owner: "{{ asset_owner }}"
+        group: "{{ asset_group }}"
+        mode: '0640'    # For files
+        directory_mode: '0750'  # For directories
+
+    - name: Make all .sh files executable using find
+      command: "find {{ remote_asset_dir }} -type f -name '*.sh' -exec chmod a+x {} +"
+      args:
+        chdir: "{{ remote_asset_dir }}"

@@ -3,6 +3,7 @@
   hosts: java_machine
   become: true
   gather_facts: true
+
   vars:
     java_version: "21"
 

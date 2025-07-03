@@ -1,0 +1,55 @@
+---
+- name: Collect system metrics every 5 seconds using systemd
+  hosts: java_machine
+  become: true
+  gather_facts: true
+
+  vars:
+    remote_asset_dir: /home/ubuntu/assets
+    script_name: system_metrics.sh
+    service_name: system_metrics
+
+  tasks:
+
+    - name: Make all .sh files executable using find
+      command: "find {{ remote_asset_dir }} -type f -name '*.sh' -exec chmod a+x {} +"
+      args:
+        chdir: "{{ remote_asset_dir }}"
+
+    - name: Create systemd service unit
+      copy:
+        dest: "/etc/systemd/system/{{ service_name }}.service"
+        content: |
+          [Unit]
+          Description=Collect system metrics
+
+          [Service]
+          Type=oneshot
+          ExecStart={{ remote_asset_dir }}/{{ script_name }}
+
+    - name: Create systemd timer unit
+      copy:
+        dest: "/etc/systemd/system/{{ service_name }}.timer"
+        content: |
+          [Unit]
+          Description=Collect system metrics every 5 seconds
+
+          [Timer]
+          OnBootSec=5s
+          OnUnitActiveSec=5s
+          Unit={{ service_name }}.service
+
+          [Install]
+          WantedBy=timers.target
+
+    - name: Reload systemd daemon
+      command: systemctl daemon-reexec
+
+    - name: Enable and start timer
+      systemd:
+        name: "{{ service_name }}.timer"
+        enabled: true
+        state: started
+
+
+# tail logs using :  sudo journalctl -u system_metrics.service -f
