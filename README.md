@@ -45,3 +45,10 @@ scp -i \
 /Users/abhinav.dubey/Documents/ad/aws-and-docker/0_secrets/aws_ad89.pem \
 /Users/abhinav.dubey/Documents/ad/cores-and-threads/resources/* \
 ubuntu@13.127.31.44:/home/ubuntu/
+
+
+<!-- 
+CONFIG_FILE=config-prod.edn \
+java -javaagent:/home/ubuntu/assets/jolokia-jvm-1.6.2-agent.jar=port=8778,host=0.0.0.0 \
+-jar /home/ubuntu/assets/cores-and-threads-0.1.0-standalone.jar 
+-->
