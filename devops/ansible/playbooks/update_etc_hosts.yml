@@ -1,0 +1,15 @@
+---
+- name: Append entries to /etc/hosts
+  hosts: java_machine
+  become: true
+  gather_facts: true
+
+  vars:
+    src_dir: /home/ubuntu/assets
+    src_text_file_name: new_etc_hosts.txt
+
+  tasks:
+    - name: Append entries to /etc/hosts
+      shell: cat {{ src_dir }}/{{ src_text_file_name }} >> /etc/hosts
+      args:
+        executable: /bin/bash

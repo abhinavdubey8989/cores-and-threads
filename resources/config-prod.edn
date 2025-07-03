@@ -2,6 +2,6 @@
            :port 3020
            :repl-port 6050}
  :log-config {:dir "/home/ubuntu"
-              :file-name "service-log.log"}
- :statsd {:host "localhost"
+              :file-name "core-and-threads.log"}
+ :statsd {:host "ec2.monitoring"
           :port 8125}}
