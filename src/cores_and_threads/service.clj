@@ -1,6 +1,7 @@
 (ns cores-and-threads.service
   (:require [clj-statsd :as statsd]
-            [cores-and-threads.logger :as logger]))
+            [cores-and-threads.logger :as logger])
+  (:import [java.io BufferedReader InputStreamReader]))
 
 
 (defmacro wrap-statsd-time
@@ -18,11 +19,16 @@
 (defn start-a-thread
   "Business logic to be executed by each thread"
   [{:keys [thread_id
-           machine_type
            metric_prefix
            duration_minutes
            input_num] :as params}]
-  (let [thread_name (.getName (Thread/currentThread))
+  (let [hostname (-> (Runtime/getRuntime)
+                     (.exec "hostname")
+                     .getInputStream
+                     (InputStreamReader.)
+                     (BufferedReader.)
+                     .readLine)
+        thread_name (.getName (Thread/currentThread))
         curr_epoch (System/currentTimeMillis)
         end_epoch (+ curr_epoch (* duration_minutes 60 1000))
         loop_counter (atom 0)]
@@ -34,9 +40,11 @@
             diff (- end_epoch curr_epoch)]
         (if (> diff 0)
           (do
-            (wrap-statsd-time (format "%s.%s.success.%s"
-                                      machine_type
-                                      metric_prefix
+            (wrap-statsd-time (format "%s.%s.%s"
+                                      hostname
+                                      (if (seq metric_prefix)
+                                        metric_prefix
+                                        "work")
                                       (str "thread-" thread_id))
                               (do-work params))
             (swap! loop_counter inc)
@@ -44,7 +52,7 @@
           (logger/info (format "Done work : [%s] times, th-name : [%s]"
                                @loop_counter
                                thread_name)
-                       {:machine_type machine_type
+                       {:hostname hostname
                         :input_num input_num
                         :thread_name thread_name
                         :thread_id (inc thread_id)}))))))

@@ -1,6 +1,6 @@
 ---
 - name: Collect system metrics every 5 seconds using systemd
-  hosts: java_machine
+  hosts: java_node
   become: true
   gather_facts: true
 

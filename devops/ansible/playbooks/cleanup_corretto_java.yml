@@ -1,6 +1,6 @@
 ---
 - name: Cleanup existing Amazon Corretto configuration
-  hosts: java_machine
+  hosts: java_node
   become: true
   gather_facts: true
 

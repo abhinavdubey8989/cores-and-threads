@@ -1,6 +1,6 @@
 ---
 - name: Clone and run docker-grafana-graphite
-  hosts: monitoring_machine
+  hosts: monitoring_node
   become: true
   gather_facts: true
 

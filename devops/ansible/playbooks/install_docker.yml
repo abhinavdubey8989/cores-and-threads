@@ -1,6 +1,6 @@
 ---
 - name: Install Docker, Docker Compose, and Make on Ubuntu 24.04
-  hosts: monitoring_machine
+  hosts: monitoring_node
   become: true
   gather_facts: true
 

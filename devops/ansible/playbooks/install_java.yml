@@ -1,6 +1,6 @@
 ---
 - name: Install Amazon Corretto 21 JDK on Ubuntu EC2
-  hosts: java_machine
+  hosts: java_node
   become: true
   gather_facts: true
 
