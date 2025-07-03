@@ -1,0 +1,69 @@
+---
+- name: Create systemd jobs for scraping JVM metrics, 1 job for each target java node
+  hosts: monitoring_node
+  become: true
+  gather_facts: true
+
+  vars:
+    remote_asset_dir: /home/ubuntu/assets
+    script_name: scrape_jvm.sh
+    targets:
+      - name: ec2.java-1
+        host: ec2.java-1
+        port: 8778
+      - name: ec2.java-2
+        host: ec2.java-2
+        port: 8778
+      - name: ec2.java-3
+        host: ec2.java-3
+        port: 8778
+
+  tasks:
+
+    - name: Make all .sh files executable using find
+      command: "find {{ remote_asset_dir }} -type f -name '*.sh' -exec chmod a+x {} +"
+      args:
+        chdir: "{{ remote_asset_dir }}"
+
+    - name: Create systemd service units for each JVM host
+      copy:
+        dest: "/etc/systemd/system/{{ item.name }}.service"
+        content: |
+          [Unit]
+          Description=Collect JVM metrics from {{ item.host }}
+          After=network.target
+
+          [Service]
+          Type=oneshot
+          ExecStart={{ remote_asset_dir }}/{{ script_name }} {{ item.host }} {{ item.port }}
+
+        mode: '0644'
+      loop: "{{ targets }}"
+
+    - name: Create systemd timer units for each JVM host
+      copy:
+        dest: "/etc/systemd/system/{{ item.name }}.timer"
+        content: |
+          [Unit]
+          Description=Run {{ item.name }} every 5 seconds
+
+          [Timer]
+          OnBootSec=5s
+          OnUnitActiveSec=5s
+          Unit={{ item.name }}.service
+
+          [Install]
+          WantedBy=timers.target
+
+        mode: '0644'
+      loop: "{{ targets }}"
+
+    - name: Reload systemd daemon
+      command: systemctl daemon-reexec
+
+    - name: Enable and start all timers
+      systemd:
+        name: "{{ item.name }}.timer"
+        enabled: true
+        state: started
+      loop: "{{ targets }}"

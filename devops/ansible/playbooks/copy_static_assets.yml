@@ -5,7 +5,7 @@
   gather_facts: true
 
   vars:
-    local_asset_dir: /home/ubuntu/ansible/assets
+    local_asset_dir: /home/ubuntu/cores-and-threads/devops/static
     remote_asset_dir: /home/ubuntu/assets
     asset_owner: ubuntu
     asset_group: ubuntu

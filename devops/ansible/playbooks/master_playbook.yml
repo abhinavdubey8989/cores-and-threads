@@ -6,5 +6,4 @@
 - import_playbook: install_java.yml
 - import_playbook: setup_monitoring_node.yml
 - import_playbook: collect_system_metrics.yml
-
-# run jar
+- import_playbook: collect_jvm_metrics.yml
