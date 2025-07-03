@@ -1,7 +1,7 @@
 {:service {:name "core-and-threads"
            :port 3020
            :repl-port 6050}
- :log-config {:dir "/home/ubuntu"
+ :log-config {:dir "/Users/abhinav.dubey/Documents/ad/cores-and-threads/logs"
               :file-name "service-log.log"}
  :statsd {:host "localhost"
           :port 8125}}

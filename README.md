@@ -45,10 +45,3 @@ scp -i \
 /Users/abhinav.dubey/Documents/ad/aws-and-docker/0_secrets/aws_ad89.pem \
 /Users/abhinav.dubey/Documents/ad/cores-and-threads/resources/* \
 ubuntu@13.127.31.44:/home/ubuntu/
-
-# [Temp]
-`java -version`
-
-openjdk version "21.0.5" 2024-10-15 LTS
-OpenJDK Runtime Environment Corretto-21.0.5.11.1 (build 21.0.5+11-LTS)
-OpenJDK 64-Bit Server VM Corretto-21.0.5.11.1 (build 21.0.5+11-LTS, mixed mode, sharing)

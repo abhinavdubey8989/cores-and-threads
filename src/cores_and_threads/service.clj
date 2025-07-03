@@ -61,7 +61,6 @@
 (defn process-api
   [{:keys [threads duration_minutes
            input_num machine_type] :as params}]
-  (def p params)
   (when (and (number? threads)
              (> threads 0))
     (logger/info (format "Starting work for [%s] minutes with [%s] threads"
