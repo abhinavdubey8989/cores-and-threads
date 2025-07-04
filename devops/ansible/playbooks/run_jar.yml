@@ -11,8 +11,8 @@
     service_name: cores-and-threads
     java_opts: >-
       -XX:+UseG1GC
-      -XX:InitialHeapSize=2g
-      -XX:SoftMaxHeapSize=3g
+      -XX:InitialHeapSize=4g
+      -XX:SoftMaxHeapSize=4g
       -XX:MaxHeapSize=4g
       -XX:InitiatingHeapOccupancyPercent=60
       -XX:MaxGCPauseMillis=200

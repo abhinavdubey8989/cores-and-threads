@@ -68,13 +68,20 @@ Default output format [None]: json
 ###### ###### ###### ###### ###### ###### ###### ######
 ###### ###### ###### [Challenges] ###### ###### ######
 ###### ###### ###### ###### ###### ###### ###### ######
-[C1]
+
+# [Challenge]
+- sometime the 1st run of playbook not running for target nodes
+[Resolution]
+- manually SSH into all inventory nodes one by one from workstation/jump node
+
+
+# [Challenge]
 - spikey & irregular metrics for JVM thread-count & system load avg
 [Resolution]
 - use gauge instead of counter metrics
 
 
-[C2]
+# [Challenge]
 - Getting error : `Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "clojure-agent-send-off-pool-9"`
 [Resolution]
 - need to check ??

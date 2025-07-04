@@ -7,5 +7,6 @@
 
 
 (defroutes app-routes
-  (POST "/api/foo-bar" req (process-api (:body req)))
+  (POST "/api/foo-bar" req (process-api (:ctx req)
+                                        (:body req)))
   (route/not-found "Not Found"))

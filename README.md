@@ -1,7 +1,7 @@
 
 
 # [Local developement]
-- `CONFIG_FILE=config-local.edn lein repl :headless`
+- `CONFIG_FILE=/Users/abhinav.dubey/Documents/ad/cores-and-threads/resources/config-local.edn lein repl :headless  `
 
 
 # [Prod]
