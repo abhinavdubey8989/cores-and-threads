@@ -6,7 +6,7 @@ TARGET_PORT=$2
 BASE_URL="http://$TARGET_HOST:$TARGET_PORT"
 
 # hostname as metric prefix
-HOSTNAME=$(hostname)
+HOSTNAME=$1
 
 send_metrics_to_statsd() {
     local counter=$1
@@ -16,9 +16,17 @@ send_metrics_to_statsd() {
     # print to console
     # echo "$final_metric = $counter"
 
-    # send metric command
-    echo "$final_metric:$counter|c" | nc -w 1 -u $STATSD_HOST $STATSD_PORT
+    # send gauge metric command
+    echo "$final_metric:$counter|g" | nc -w 1 -u $STATSD_HOST $STATSD_PORT
 }
+
+
+to_megabyte() {
+    # Convert bytes to MB (ceiling)
+    converted_val=$(awk -v bytes="$1" 'BEGIN { printf "%d", (bytes + (1024*1024 - 1)) / (1024 * 1024) }')
+    echo "$converted_val"
+}
+
 
 emit_heap_related_metrics() {
     json=$(curl -s "$BASE_URL/jolokia/read/java.lang:type=Memory/HeapMemoryUsage")
@@ -29,10 +37,15 @@ emit_heap_related_metrics() {
     max_heap_size=$(echo "$json" | jq -r '.value.max')
     current_heap_size=$(echo "$json" | jq -r '.value.used')
 
-    send_metrics_to_statsd $initial_heap_size "jvm.heap.initial_heap_size"
-    send_metrics_to_statsd $committed_heap_size "jvm.heap.committed_heap_size"
-    send_metrics_to_statsd $max_heap_size "jvm.heap.max_heap_size"
-    send_metrics_to_statsd $current_heap_size "jvm.heap.current_heap_size"
+    initial_gb=$(to_megabyte "$initial_heap_size")
+    committed_gb=$(to_megabyte "$committed_heap_size")
+    max_gb=$(to_megabyte "$max_heap_size")
+    current_gb=$(to_megabyte "$current_heap_size")
+
+    send_metrics_to_statsd $initial_gb "jvm.heap.initial_heap_size"
+    send_metrics_to_statsd $committed_gb "jvm.heap.committed_heap_size"
+    send_metrics_to_statsd $max_gb "jvm.heap.max_heap_size"
+    send_metrics_to_statsd $current_gb "jvm.heap.current_heap_size"
 }
 
 emit_thread_related_metrics() {

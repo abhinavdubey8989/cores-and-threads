@@ -22,7 +22,7 @@ send_metrics_to_statsd() {
     # echo "$final_metric = $counter"
 
     # send metric command
-    echo "$final_metric:$counter|c" | nc -w 1 -u $STATSD_HOST $STATSD_PORT
+    echo "$final_metric:$counter|g" | nc -w 1 -u $STATSD_HOST $STATSD_PORT
 }
 
 get_cores() {

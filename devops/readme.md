@@ -50,3 +50,31 @@ Default output format [None]: json
 - create playbook called `setup.yml`
 - create inventory file called `inventory.yml`
 - run playbook : `ansible-playbook -i inventory.yml playbook.yml`
+
+
+# [updates needed after spawning aws instanaces using terraform]
+- update private IP of all machines in `devops/ansible/playbooks/inventory.yml`
+- update STATSD_HOST to private IP of monitoring node in `devops/static/env_file.env`
+- update private IPs of al nodes in `devops/static/new_etc_hosts.txt`
+
+
+
+[to-do]
+- host-name consistency [app & scripts & tf & ansibble & etc]
+- ec2 to spin in a subnet without private IP
+
+
+
+###### ###### ###### ###### ###### ###### ###### ######
+###### ###### ###### [Challenges] ###### ###### ######
+###### ###### ###### ###### ###### ###### ###### ######
+[C1]
+- spikey & irregular metrics for JVM thread-count & system load avg
+[Resolution]
+- use gauge instead of counter metrics
+
+
+[C2]
+- Getting error : `Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "clojure-agent-send-off-pool-9"`
+[Resolution]
+- need to check ??

@@ -1,0 +1,11 @@
+---
+- name: Restart service
+  hosts: java_node
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Restart systemd service
+      ansible.builtin.systemd:
+        name: cores-and-threads
+        state: restarted
