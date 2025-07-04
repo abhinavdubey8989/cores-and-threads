@@ -8,14 +8,14 @@
     remote_asset_dir: /home/ubuntu/assets
     script_name: scrape_jvm.sh
     targets:
-      - name: ec2.java-1
-        host: ec2.java-1
+      - name: cores-2
+        host: cores-2
         port: 8778
-      - name: ec2.java-2
-        host: ec2.java-2
+      - name: cores-4
+        host: cores-4
         port: 8778
-      - name: ec2.java-3
-        host: ec2.java-3
+      - name: cores-8
+        host: cores-8
         port: 8778
 
   tasks:
