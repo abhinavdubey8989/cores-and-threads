@@ -1,0 +1,13 @@
+---
+- name: Trigger GC on all nodes via Jolokia
+  hosts: java_node
+  become: false
+  gather_facts: true
+
+  tasks:
+    - name: Trigger GC via Jolokia (no output)
+      uri:
+        url: "http://localhost:8778/jolokia/exec/java.lang:type=Memory/gc"
+        method: GET
+        status_code: 200
+        return_content: no

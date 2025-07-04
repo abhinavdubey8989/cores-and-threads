@@ -3,7 +3,7 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-# EC2 with 2 cores
+# EC2 with 2 cores & 8 GB RAM
 resource "aws_instance" "java-1" {
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "m5.large"
@@ -23,7 +23,7 @@ resource "aws_instance" "java-1" {
 }
 
 
-# EC2 with 4 cores
+# EC2 with 4 cores & 16 GB RAM
 resource "aws_instance" "java-2" {
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "m5.xlarge"
@@ -43,7 +43,7 @@ resource "aws_instance" "java-2" {
 }
 
 
-# EC2 with 8 cores
+# EC2 with 8 cores & 32 GB RAM
 resource "aws_instance" "java-3" {
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "m5.2xlarge"
