@@ -54,12 +54,19 @@ Default output format [None]: json
 
 # [updates needed after spawning aws instanaces using terraform]
 - update private IP of all machines in `devops/ansible/playbooks/inventory.yml`
-- update STATSD_HOST to private IP of monitoring node in `devops/static/env_file.env`
 - update private IPs of al nodes in `devops/static/new_etc_hosts.txt`
 
 
+###### ###### ###### [How to] ###### ###### ######
+# tail logs using
+sudo journalctl -u system_metrics -f
+sudo journalctl -u cores-2 -f
 
-[to-do]
+# check status
+sudo systemctl status cores-2
+
+
+###### ###### ###### [to-do] ###### ###### ######
 - host-name consistency [app & scripts & tf & ansibble & etc]
 - ec2 to spin in a subnet without private IP
 

@@ -4,18 +4,20 @@
 
 
 (defn do-work
-  [ctx {:keys [input_num
-               times
+  [ctx {:keys [sqr_root_num
+               loop_list
                print_percent]}]
   (let [start_epoch (utils/current-epoch)]
-    (dotimes [_ times]
-      (Math/sqrt input_num))
+    (doseq [each_elem_in_list loop_list
+            i (range each_elem_in_list)]
+      (Math/sqrt sqr_root_num))
     (let [end_epoch (utils/current-epoch)]
       (when (utils/within-percent? ctx
                                    print_percent)
-        (logger/info (format "Time taken : [%s] seconds"
+        (logger/info (format "Time taken in do-work fn : [%s] seconds"
                              (/ (Math/abs (- end_epoch start_epoch)) 1000.0))
-                     {})))))
+                     {:start_epoch start_epoch
+                      :end_epoch end_epoch})))))
 
 
 (defn run-gc
@@ -31,8 +33,7 @@
   "Business logic to be executed by each thread"
   [ctx {:keys [thread_id
                metric_prefix
-               duration_minutes
-               total_counter_atom] :as params}]
+               duration_minutes] :as params}]
   (let [hostname (utils/hostname)
         thread_name (utils/thread-name)
         end_epoch (+ (utils/current-epoch)
@@ -52,14 +53,11 @@
                                       (do-work ctx params))
               (swap! loop_counter inc)
               (recur))
-            (do
-              (logger/info (format "Done work : [%s] times, th-name : [%s]"
-                                   @loop_counter
-                                   thread_name)
-                           {:hostname hostname
-                            :thread_name thread_name
-                            :thread_id (inc thread_id)})
-              (swap! total_counter_atom + @loop_counter)))))
+            (logger/info (format "A thread has done its work : [%s] times"
+                                 @loop_counter)
+                         {:hostname hostname
+                          :thread_name thread_name
+                          :thread_id (inc thread_id)}))))
       (catch java.lang.OutOfMemoryError oom
         (logger/info (format "OOM occured ...")
                      {:msg (.getMessage oom)
@@ -72,8 +70,7 @@
                       :thread_id (inc thread_id)}))
       (finally
         ;(run-gc ctx {:force_gc? true})
-        (logger/info (format "total_counter_atom ...")
-                     {:total_counter_atom @total_counter_atom})))))
+        ))))
 
 
 (defn process-api
@@ -82,16 +79,18 @@
         end_epoch (+ curr_epoch (* duration_minutes 60 1000))]
     (when (and (number? threads)
                (> threads 0))
-      (logger/info (format "Metric prefix=[%s] , Formatted-times : "
+      (logger/info (format "Starting process-api , metric prefix=[%s]"
                            metric_prefix)
                    {:start (utils/epoch->formatted-time curr_epoch)
-                    :end (utils/epoch->formatted-time end_epoch)})
+                    :end (utils/epoch->formatted-time end_epoch)
+                    :params (-> params
+                                (assoc :loop_list_size (count (:loop_list params)))
+                                (dissoc :loop_list))})
       (dotimes [i threads]
         ;; spawn new thread
         (future
           (start-a-thread ctx
                           (merge params
-                                 {:thread_id i
-                                  :total_counter_atom (atom 0)})))))
+                                 {:thread_id i})))))
     {:status 200
      :body {:message "Processing started"}}))

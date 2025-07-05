@@ -50,6 +50,3 @@
         name: "{{ service_name }}.timer"
         enabled: true
         state: started
-
-
-# tail logs using :  sudo journalctl -u system_metrics.service -f
