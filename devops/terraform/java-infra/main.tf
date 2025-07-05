@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 # EC2 with 2 cores & 8 GB RAM
-resource "aws_instance" "java-1" {
+resource "aws_instance" "cores-2" {
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "m5.large"
   key_name      = "ad89"
@@ -12,19 +12,19 @@ resource "aws_instance" "java-1" {
 
   user_data = <<-EOF
     #!/bin/bash
-    hostnamectl set-hostname java-1
-    echo "java-1" > /etc/hostname
-    sed -i "1s/^/127.0.0.1 java-1\\n/" /etc/hosts
+    hostnamectl set-hostname cores-2
+    echo "cores-2" > /etc/hostname
+    sed -i "1s/^/127.0.0.1 cores-2\\n/" /etc/hosts
   EOF
 
   tags = {
-    Name = "java-1"
+    Name = "cores-2"
   }
 }
 
 
 # EC2 with 4 cores & 16 GB RAM
-resource "aws_instance" "java-2" {
+resource "aws_instance" "cores-4" {
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "m5.xlarge"
   key_name      = "ad89"
@@ -32,19 +32,19 @@ resource "aws_instance" "java-2" {
 
   user_data = <<-EOF
     #!/bin/bash
-    hostnamectl set-hostname java-2
-    echo "java-2" > /etc/hostname
-    sed -i "1s/^/127.0.0.1 java-2\\n/" /etc/hosts
+    hostnamectl set-hostname cores-4
+    echo "cores-4" > /etc/hostname
+    sed -i "1s/^/127.0.0.1 cores-4\\n/" /etc/hosts
   EOF
 
   tags = {
-    Name = "java-2"
+    Name = "cores-4"
   }
 }
 
 
 # EC2 with 8 cores & 32 GB RAM
-resource "aws_instance" "java-3" {
+resource "aws_instance" "cores-8" {
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "m5.2xlarge"
   key_name      = "ad89"
@@ -52,12 +52,12 @@ resource "aws_instance" "java-3" {
 
   user_data = <<-EOF
     #!/bin/bash
-    hostnamectl set-hostname java-3
-    echo "java-3" > /etc/hostname
-    sed -i "1s/^/127.0.0.1 java-3\\n/" /etc/hosts
+    hostnamectl set-hostname cores-8
+    echo "cores-8" > /etc/hostname
+    sed -i "1s/^/127.0.0.1 cores-8\\n/" /etc/hosts
   EOF
 
   tags = {
-    Name = "java-3"
+    Name = "cores-8"
   }
 }

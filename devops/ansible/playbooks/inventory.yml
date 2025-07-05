@@ -1,11 +1,11 @@
 java_node:
   hosts:
     java_node_1:
-      ansible_host: 172.31.9.215
+      ansible_host: 172.31.15.31
     java_node_2:
-      ansible_host: 172.31.10.99
+      ansible_host: 172.31.4.198
     java_node_3:
-      ansible_host: 172.31.2.202
+      ansible_host: 172.31.10.132
   vars:
     # common var for each host above
     ansible_user: ubuntu
@@ -15,6 +15,6 @@ java_node:
 monitoring_node:
   hosts:
     monitoring_node_1:
-      ansible_host: 172.31.10.234
+      ansible_host: 172.31.6.121
       ansible_user: ubuntu
       ansible_ssh_private_key_file: ~/.ssh/aws_ad89.pem
