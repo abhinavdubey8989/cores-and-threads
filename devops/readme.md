@@ -59,11 +59,16 @@ Default output format [None]: json
 
 ###### ###### ###### [How to] ###### ###### ######
 # tail logs using
-sudo journalctl -u system_metrics -f
-sudo journalctl -u cores-2 -f
+sudo journalctl -fu system_metrics
+sudo journalctl -fu cores-2
 
 # check status
 sudo systemctl status cores-2
+
+
+# cURL to get dashboard JSON
+curl --location 'http://my_monitoring.in/api/dashboards/db/cores-and-threads' \
+--header 'Authorization: Bearer <token>'
 
 
 ###### ###### ###### [to-do] ###### ###### ######

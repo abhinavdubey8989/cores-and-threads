@@ -1,12 +1,22 @@
+
+# threads : 1, 2, 4, 8, 10
+# with 1 thread we just check how much time it takes to execute do-work fn once -> set print-percent to 100 here
+
+# Sqr-root   looptimes     time-taken by 1 thead
+# 10^15      10^6 x 10     0.098 -> 0.1 seconds
+# 10^15      10^6 x 15     0.14  -> 0.15 seconds
+
+
 THREADS=8
-DURATION_MINUTES=5
+DURATION_MINUTES=10
 METRIC_PREFIX="work"
 PRINT_PERCENT=1
+
 PORT="3020"
 SQR_ROOT_NUMBER=$((1000 * 1000 * 1000 * 1000 * 1000))
 
 # below 2 vars are only for LOOP_LIST creation
-NUM_OF_ELEMENTS_IN_LOOP_LIST=20
+NUM_OF_ELEMENTS_IN_LOOP_LIST=10
 EACH_ELEMENT_VALUE_IN_LOOP_LIST=1000000
 
 

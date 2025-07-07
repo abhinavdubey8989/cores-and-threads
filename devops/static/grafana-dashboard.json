@@ -7,10 +7,10 @@
         "slug": "cores-and-threads",
         "expires": "0001-01-01T00:00:00Z",
         "created": "2025-07-05T19:08:17Z",
-        "updated": "2025-07-05T19:50:43Z",
+        "updated": "2025-07-07T18:02:49Z",
         "updatedBy": "admin",
         "createdBy": "admin",
-        "version": 5
+        "version": 13
     },
     "dashboard": {
         "annotations": {
@@ -22,7 +22,7 @@
         "hideControls": false,
         "id": 4,
         "links": [],
-        "refresh": false,
+        "refresh": "5s",
         "rows": [
             {
                 "collapse": false,
@@ -34,13 +34,13 @@
                         "dashLength": 10,
                         "dashes": false,
                         "datasource": null,
-                        "decimals": null,
+                        "decimals": 2,
                         "fill": 1,
                         "id": 1,
                         "legend": {
                             "alignAsTable": true,
                             "avg": true,
-                            "current": true,
+                            "current": false,
                             "max": true,
                             "min": false,
                             "rightSide": true,
@@ -127,7 +127,7 @@
                         "legend": {
                             "alignAsTable": true,
                             "avg": true,
-                            "current": true,
+                            "current": false,
                             "max": true,
                             "min": false,
                             "rightSide": true,
@@ -157,7 +157,7 @@
                         "thresholds": [],
                         "timeFrom": null,
                         "timeShift": null,
-                        "title": "Current heap size",
+                        "title": "Used heap size (in %)",
                         "tooltip": {
                             "shared": true,
                             "sort": 0,
@@ -214,7 +214,7 @@
                         "legend": {
                             "alignAsTable": true,
                             "avg": true,
-                            "current": true,
+                            "current": false,
                             "max": true,
                             "min": false,
                             "rightSide": true,
@@ -244,7 +244,7 @@
                         "thresholds": [],
                         "timeFrom": null,
                         "timeShift": null,
-                        "title": "Current thread count (non-daemon)",
+                        "title": "Thread count (non-daemon)",
                         "tooltip": {
                             "shared": true,
                             "sort": 0,
@@ -301,7 +301,7 @@
                         "legend": {
                             "alignAsTable": true,
                             "avg": true,
-                            "current": true,
+                            "current": false,
                             "max": false,
                             "min": false,
                             "rightSide": true,
@@ -388,7 +388,7 @@
                         "legend": {
                             "alignAsTable": true,
                             "avg": true,
-                            "current": true,
+                            "current": false,
                             "max": true,
                             "min": false,
                             "rightSide": true,
@@ -435,6 +435,182 @@
                         "yaxes": [
                             {
                                 "format": "ms",
+                                "label": null,
+                                "logBase": 1,
+                                "max": null,
+                                "min": null,
+                                "show": true
+                            },
+                            {
+                                "format": "short",
+                                "label": null,
+                                "logBase": 1,
+                                "max": null,
+                                "min": null,
+                                "show": false
+                            }
+                        ]
+                    }
+                ],
+                "repeat": null,
+                "repeatIteration": null,
+                "repeatRowId": null,
+                "showTitle": false,
+                "title": "Dashboard Row",
+                "titleSize": "h6"
+            },
+            {
+                "collapse": false,
+                "height": 250,
+                "panels": [
+                    {
+                        "aliasColors": {},
+                        "bars": false,
+                        "dashLength": 10,
+                        "dashes": false,
+                        "datasource": null,
+                        "decimals": 0,
+                        "fill": 1,
+                        "id": 6,
+                        "legend": {
+                            "alignAsTable": true,
+                            "avg": true,
+                            "current": false,
+                            "max": false,
+                            "min": false,
+                            "rightSide": true,
+                            "show": true,
+                            "sortDesc": true,
+                            "total": true,
+                            "values": true
+                        },
+                        "lines": true,
+                        "linewidth": 1,
+                        "links": [],
+                        "nullPointMode": "null",
+                        "percentage": false,
+                        "pointradius": 5,
+                        "points": false,
+                        "renderer": "flot",
+                        "seriesOverrides": [],
+                        "spaceLength": 10,
+                        "span": 12,
+                        "stack": false,
+                        "steppedLine": false,
+                        "targets": [
+                            {
+                                "refId": "A",
+                                "target": "aliasByNode(transformNull(stats.gauges.$java_host.ctx.total, 0), 2, 4)"
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeFrom": null,
+                        "timeShift": null,
+                        "title": "Context switch (abs)",
+                        "tooltip": {
+                            "shared": true,
+                            "sort": 0,
+                            "value_type": "individual"
+                        },
+                        "type": "graph",
+                        "xaxis": {
+                            "buckets": null,
+                            "mode": "time",
+                            "name": null,
+                            "show": true,
+                            "values": []
+                        },
+                        "yaxes": [
+                            {
+                                "format": "short",
+                                "label": null,
+                                "logBase": 1,
+                                "max": null,
+                                "min": null,
+                                "show": true
+                            },
+                            {
+                                "format": "short",
+                                "label": null,
+                                "logBase": 1,
+                                "max": null,
+                                "min": null,
+                                "show": false
+                            }
+                        ]
+                    }
+                ],
+                "repeat": null,
+                "repeatIteration": null,
+                "repeatRowId": null,
+                "showTitle": false,
+                "title": "Dashboard Row",
+                "titleSize": "h6"
+            },
+            {
+                "collapse": false,
+                "height": 250,
+                "panels": [
+                    {
+                        "aliasColors": {},
+                        "bars": false,
+                        "dashLength": 10,
+                        "dashes": false,
+                        "datasource": null,
+                        "decimals": 2,
+                        "fill": 1,
+                        "id": 7,
+                        "legend": {
+                            "alignAsTable": true,
+                            "avg": true,
+                            "current": true,
+                            "max": true,
+                            "min": true,
+                            "rightSide": true,
+                            "show": true,
+                            "sortDesc": true,
+                            "total": false,
+                            "values": true
+                        },
+                        "lines": true,
+                        "linewidth": 1,
+                        "links": [],
+                        "nullPointMode": "null",
+                        "percentage": false,
+                        "pointradius": 5,
+                        "points": false,
+                        "renderer": "flot",
+                        "seriesOverrides": [],
+                        "spaceLength": 10,
+                        "span": 12,
+                        "stack": false,
+                        "steppedLine": false,
+                        "targets": [
+                            {
+                                "refId": "A",
+                                "target": "aliasByNode(transformNull(stats.gauges.$java_host.ctx_rate.*, 0), 2, 4)"
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeFrom": null,
+                        "timeShift": null,
+                        "title": "Context switch (%)",
+                        "tooltip": {
+                            "shared": true,
+                            "sort": 0,
+                            "value_type": "individual"
+                        },
+                        "type": "graph",
+                        "xaxis": {
+                            "buckets": null,
+                            "mode": "time",
+                            "name": null,
+                            "show": true,
+                            "values": []
+                        },
+                        "yaxes": [
+                            {
+                                "format": "short",
                                 "label": null,
                                 "logBase": 1,
                                 "max": null,
@@ -533,8 +709,8 @@
             ]
         },
         "time": {
-            "from": "2025-07-05T19:36:57.781Z",
-            "to": "2025-07-05T19:42:31.322Z"
+            "from": "now-1h",
+            "to": "now"
         },
         "timepicker": {
             "refresh_intervals": [
@@ -563,6 +739,6 @@
         },
         "timezone": "",
         "title": "Cores-and-threads",
-        "version": 5
+        "version": 13
     }
 }

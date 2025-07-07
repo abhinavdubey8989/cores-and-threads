@@ -12,7 +12,9 @@ pom.xml.asc
 .hg/
 
 
-.lsp
+.lsp/*
+.lsp/.cache/*
+
 .clj-kondo
 doc
 .calva
