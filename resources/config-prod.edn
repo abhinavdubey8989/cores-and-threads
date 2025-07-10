@@ -1,0 +1,9 @@
+{:service {:name "core-and-threads"
+           :port 3020
+           :repl-port 6050
+           :print-percent 50}
+ :gc {:threadhold-ratio 80}
+ :log-config {:dir "/tmp"
+              :file-name "core-and-threads.log"}
+ :statsd {:host "ec2.monitoring"
+          :port 8125}}
