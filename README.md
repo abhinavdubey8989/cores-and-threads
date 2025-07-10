@@ -4,7 +4,7 @@ Analyse the impact of number of CPU cores on the throughput & latency of a multi
 
 
 # [Local developement]
-- `CONFIG_FILE=/Users/abhinav.dubey/Documents/ad/cores-and-threads/resources/config-local.edn lein repl :headless  `
+- `CONFIG_FILE=/full/path/to/config-local.edn lein repl :headless`
 
 
 # [Prod]
@@ -16,6 +16,6 @@ Analyse the impact of number of CPU cores on the throughput & latency of a multi
 - `lein uberjar` -> will create 2 JARs use the `standalone` jar
 
 # [Running the JAR]
-CONFIG_FILE=config-prod.edn \
+CONFIG_FILE=/ful/path/to/config-prod.edn \
 java -javaagent:/full/path/to/jolokia.jar=port=8778,host=0.0.0.0 \
      -jar /full/path/to/cores-and-threads-0.1.0-standalone.jar
