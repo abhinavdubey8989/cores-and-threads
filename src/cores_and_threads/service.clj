@@ -5,11 +5,12 @@
 
 (defn do-work
   [ctx {:keys [sqr_root_num
-               loop_list
+               outer_loop_times
+               inner_loop_times
                print_percent]}]
   (let [start_epoch (utils/current-epoch)]
-    (doseq [each_elem_in_list loop_list
-            i (range each_elem_in_list)]
+    (doseq [i outer_loop_times
+            j (range inner_loop_times)]
       (Math/sqrt sqr_root_num))
     (let [end_epoch (utils/current-epoch)]
       (when (utils/within-percent? ctx
